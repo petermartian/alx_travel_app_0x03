@@ -1,7 +1,6 @@
 # listings/admin.py
 from django.contrib import admin
-from .models import Hotel, Booking, Payment
-
+from .models import Hotel, Booking
 
 @admin.register(Hotel)
 class ListingAdmin(admin.ModelAdmin):
@@ -17,8 +16,8 @@ class BookingAdmin(admin.ModelAdmin):
     list_filter = ("currency", "start_date", "end_date")
 
 
-@admin.register(Payment)
-class PaymentAdmin(admin.ModelAdmin):
-    list_display = ("id", "booking", "tx_ref", "status", "amount", "currency", "updated_at")
-    search_fields = ("tx_ref", "booking__id")
-    list_filter = ("status", "currency")
+#@admin.register(Payment)
+#class PaymentAdmin(admin.ModelAdmin):
+    #list_display = ("id", "booking", "tx_ref", "status", "amount", "currency", "updated_at")
+    #search_fields = ("tx_ref", "booking__id")
+    #list_filter = ("status", "currency")
