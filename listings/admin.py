@@ -1,9 +1,9 @@
 # listings/admin.py
 from django.contrib import admin
-from .models import Listing, Booking, Payment
+from .models import Hotel, Booking, Payment
 
 
-@admin.register(Listing)
+@admin.register(Hotel)
 class ListingAdmin(admin.ModelAdmin):
     list_display = ("id", "title", "price_per_night", "currency", "created_at")
     search_fields = ("title",)
