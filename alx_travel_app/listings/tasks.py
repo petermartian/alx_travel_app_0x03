@@ -1,14 +1,29 @@
 from celery import shared_task
 from django.core.mail import send_mail
-from django.conf import settings
-from .models import Payment
+from .models import Booking
 
 @shared_task
-def send_payment_receipt(payment_id: int):
-    p = Payment.objects.select_related("booking", "booking__user").get(id=payment_id)
-    user = p.booking.user
-    subject = f"Payment confirmed for Booking #{p.booking.id}"
-    body = f"Hi {user.get_full_name() or user.username},\n\nWe received your payment ({p.amount} {p.currency}).\nTx Ref: {p.tx_ref}\nStatus: {p.status}\n\nThanks!"
-    to = [user.email] if user.email else []
-    if to:
-        send_mail(subject, body, settings.DEFAULT_FROM_EMAIL, to, fail_silently=True)
+def send_booking_confirmation_email(booking_id):
+    """
+    Celery task to send a booking confirmation email asynchronously.
+    """
+    try:
+        booking = Booking.objects.get(id=booking_id)
+        subject = f"Booking Confirmation for {booking.hotel.name}"
+        message = (
+            f"Dear {booking.user.username},\n\n"
+            f"Thank you for your booking at {booking.hotel.name}.\n\n"
+            f"Booking Details:\n"
+            f"- Check-in: {booking.check_in_date}\n"
+            f"- Check-out: {booking.check_out_date}\n"
+            f"- Guests: {booking.num_guests}\n\n"
+            f"We look forward to welcoming you!\n\n"
+            f"Best regards,\nThe ALX Travel App Team"
+        )
+        from_email = 'no-reply@alxtravelapp.com'
+        recipient_list = [booking.user.email]
+
+        send_mail(subject, message, from_email, recipient_list)
+        return f"Confirmation email sent for booking ID {booking_id}"
+    except Booking.DoesNotExist:
+        return f"Booking with ID {booking_id} not found."

@@ -161,3 +161,40 @@ LOGGING = {
     "handlers": {"console": {"class": "logging.StreamHandler"}},
     "root": {"handlers": ["console"], "level": "INFO"},
 }
+
+
+# alx_travel_app/settings.py
+
+# ... (all your other settings)
+
+# ==============================================================================
+# CELERY SETTINGS
+# ==============================================================================
+# The URL of the message broker (RabbitMQ in this case).
+# The default RabbitMQ user/pass is guest/guest.
+CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672//'
+
+# The backend used to store task results.
+CELERY_RESULT_BACKEND = 'rpc://'
+
+# Other Celery settings
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'UTC'
+
+
+# ==============================================================================
+# EMAIL SETTINGS
+# ==============================================================================
+# For development/testing, this backend prints emails to the console.
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# For production, you would use SMTP:
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp.example.com'
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# EMAIL_HOST_USER = 'your-email@example.com'
+# EMAIL_HOST_PASSWORD = 'your-password'
+DEFAULT_FROM_EMAIL = 'no-reply@alxtravelapp.com'
