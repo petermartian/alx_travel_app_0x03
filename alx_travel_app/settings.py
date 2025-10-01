@@ -158,10 +158,12 @@ DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "no-reply@alxtravelapp.com"
 
 # ─── 15) IP Geolocation (django-ip-geolocation) ───────────────────────────────
 IP_GEOLOCATION_SETTINGS = {
-    "BACKEND": "ipapi",
+    # Correct this line to provide the full import path
+    "BACKEND": "django_ip_geolocation.backends.ipapi",
     "API_KEY": os.getenv("IPAPI_API_KEY", ""),
     "ENABLED": os.getenv("IP_GEOLOCATION_ENABLED", "True").lower() == "true",
 }
+
 
 # ─── 16) Logging ──────────────────────────────────────────────────────────────
 LOGGING = {
