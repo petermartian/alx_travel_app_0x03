@@ -31,23 +31,23 @@ INSTALLED_APPS = [
     "rest_framework",
     "corsheaders",
     "drf_yasg",
-    "django_ip_geolocation",  # For IP-based geolocation
+    "django_ip_geolocation",
     # Local apps
     "listings",
 ]
 
 # ─── 3) Middleware ────────────────────────────────────────────────────────────
 MIDDLEWARE = [
-    "corsheaders.middleware.CorsMiddleware",  # Must be first
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",  # For static files in production
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "django_ip_geolocation.middleware.IpGeolocationMiddleware",  # For geolocation
+    "django_ip_geolocation.middleware.IpGeolocationMiddleware",
 ]
 
 # ─── 4) URLs & WSGI/ASGI ──────────────────────────────────────────────────────
@@ -73,9 +73,8 @@ TEMPLATES = [
 ]
 
 # ─── 6) Database ──────────────────────────────────────────────────────────────
-# Default to SQLite for local dev; use DATABASE_URL for deployment (e.g., Render)
 DATABASES = {
-    "default": dj_database_url.config( # <--- Remove the parentheses that were here
+    "default": dj_database_url.config(
         default=os.getenv("DATABASE_URL", f"sqlite:///{BASE_DIR / 'db.sqlite3'}"),
         conn_max_age=600
     )

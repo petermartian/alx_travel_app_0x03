@@ -157,25 +157,3 @@ class VerifyPaymentAPIView(APIView):
 # Optional aliases
 InitiatePaymentView = InitiatePaymentAPIView
 VerifyPaymentView = VerifyPaymentAPIView
-
-# listings/views.py
-from rest_framework import viewsets
-from .models import Hotel, Booking
-from .serializers import HotelSerializer, BookingSerializer
-from .tasks import send_booking_confirmation_email # <--- Import the task
-
-class HotelViewSet(viewsets.ModelViewSet):
-    queryset = Hotel.objects.all()
-    serializer_class = HotelSerializer
-
-class BookingViewSet(viewsets.ModelViewSet):
-    queryset = Booking.objects.all()
-    serializer_class = BookingSerializer
-
-    def perform_create(self, serializer):
-        # Save the new booking instance
-        booking = serializer.save(user=self.request.user)
-        
-        # Trigger the background task to send an email
-        # We pass the booking ID because it's a simple, serializable type.
-        send_booking_confirmation_email.delay(booking.id) # <--- Add this line
