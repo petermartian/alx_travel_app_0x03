@@ -1,46 +1,19 @@
-# listings/serializers.py
 from rest_framework import serializers
-from .models import Listing, Booking, Payment
+from .models import Hotel, Booking, Payment
 
-
-class ListingSerializer(serializers.ModelSerializer):
+class HotelSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Listing
-        fields = ["id", "title", "description", "price_per_night", "currency", "created_at"]
-
+        model = Hotel
+        fields = ["id", "name", "location", "price_per_night"]
 
 class BookingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Booking
-        fields = [
-            "id",
-            "user",
-            "listing",
-            "start_date",
-            "end_date",
-            "guests",
-            "total_price",
-            "currency",
-            "created_at",
-        ]
-        read_only_fields = ["user", "created_at"]
-
+        fields = ["id", "user", "hotel", "check_in_date", "check_out_date", "num_guests"]
+        read_only_fields = ["user"]
 
 class PaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Payment
-        fields = [
-            "id",
-            "booking",
-            "tx_ref",
-            "chapa_ref_id",
-            "amount",
-            "currency",
-            "status",
-            "checkout_url",
-            "raw_init_resp",
-            "raw_verify_resp",
-            "created_at",
-            "updated_at",
-        ]
-        read_only_fields = ["tx_ref", "status", "checkout_url", "raw_init_resp", "raw_verify_resp", "created_at", "updated_at"]
+        fields = "__all__"
+        read_only_fields = ["tx_ref", "status", "created_at", "updated_at"]
