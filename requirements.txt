@@ -11,7 +11,7 @@ python-dotenv
 # DRF & API Docs
 djangorestframework
 drf-yasg
-corsheaders
+django-cors-headers
 
 # Background Tasks
 celery
