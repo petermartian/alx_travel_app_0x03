@@ -10,8 +10,21 @@ load_dotenv(BASE_DIR / ".env")  # Load .env from project root
 
 # Security settings
 SECRET_KEY = os.getenv("SECRET_KEY", "change-me-in-prod")
-DEBUG = os.getenv("DEBUG", "True").lower() == "true"
-ALLOWED_HOSTS = [h.strip() for h in os.getenv("ALLOWED_HOSTS", "127.0.0.1,localhost").split(",") if h.strip()]
+DEBUG = os.getenv("DEBUG", "False").lower() == "true"
+
+# --- UPDATED SECTION ---
+# This list allows your app to run locally on 127.0.0.1 and localhost.
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'localhost',
+]
+
+# This line gets the auto-generated domain name from Render when deployed.
+RENDER_EXTERNAL_HOSTNAME = os.getenv('RENDER_EXTERNAL_HOSTNAME')
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+# --- END UPDATED SECTION ---
+
 
 # Chapa payment settings
 CHAPA_SECRET_KEY = os.getenv("CHAPA_SECRET_KEY", "")
@@ -143,18 +156,10 @@ CELERY_TIMEZONE = os.getenv("TIME_ZONE", "Africa/Lagos")
 EMAIL_BACKEND = os.getenv("EMAIL_BACKEND", "django.core.mail.backends.console.EmailBackend")
 DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "no-reply@alxtravelapp.com")
 
-# Production SMTP (uncomment for production)
-# EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-# EMAIL_HOST = os.getenv("EMAIL_HOST", "smtp.example.com")
-# EMAIL_PORT = os.getenv("EMAIL_PORT", 587)
-# EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS", "True").lower() == "true"
-# EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "your-email@example.com")
-# EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
-
 # ─── 15) IP Geolocation (django-ip-geolocation) ───────────────────────────────
 IP_GEOLOCATION_SETTINGS = {
-    "BACKEND": "ipapi",  # Uses ipapi.co (free tier: 1,000 requests/day)
-    "API_KEY": os.getenv("IPAPI_API_KEY", ""),  # Get from ipapi.co
+    "BACKEND": "ipapi",
+    "API_KEY": os.getenv("IPAPI_API_KEY", ""),
     "ENABLED": os.getenv("IP_GEOLOCATION_ENABLED", "True").lower() == "true",
 }
 
