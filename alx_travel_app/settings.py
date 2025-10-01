@@ -140,10 +140,11 @@ DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "no-reply@alxtravelapp.com"
 
 # ─── 14) IP Geolocation ───────────────────────────────────────────────────────
 IP_GEOLOCATION_SETTINGS = {
-    "BACKEND": "django_ip_geolocation.backends.ipstack",
-    "API_KEY": os.getenv("IPSTACK_API_KEY", ""),  # comes from .env
+    "BACKEND": "django_ip_geolocation.backends.ipstack.IPStack",  # <-- class, not module
+    "API_KEY": os.getenv("IPSTACK_API_KEY", ""),
     "ENABLED": os.getenv("IP_GEOLOCATION_ENABLED", "True").lower() == "true",
 }
+
 
 
 # ─── 15) Logging ──────────────────────────────────────────────────────────────
