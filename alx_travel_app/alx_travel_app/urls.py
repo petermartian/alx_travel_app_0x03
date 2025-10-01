@@ -2,12 +2,12 @@
 from django.contrib import admin
 from django.urls import path, include
 
-# Swagger (optional; guarded so it won't crash if drf_yasg missing)
+# Swagger setup (optional; guarded to prevent crashes if drf_yasg is missing)
 swagger_urls = []
 try:
     from drf_yasg.views import get_schema_view
     from drf_yasg import openapi
-    from rest_framework.permissions import AllowAny
+    from rest_framework import permissions  # Use rest_framework.permissions.AllowAny
 
     schema_view = get_schema_view(
         openapi.Info(
@@ -16,7 +16,7 @@ try:
             description="API for listings, bookings, and Chapa payments",
         ),
         public=True,
-        permission_classes=(AllowAny,),
+        permission_classes=(permissions.AllowAny,),
     )
 
     swagger_urls = [
@@ -24,8 +24,8 @@ try:
         path("swagger/", schema_view.with_ui("swagger", cache_timeout=0), name="schema-swagger-ui"),
         path("redoc/", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"),
     ]
-except Exception:
-    # drf_yasg not installed or import failed; ignore
+except ImportError:
+    # drf_yasg not installed; ignore and skip Swagger URLs
     pass
 
 urlpatterns = [
