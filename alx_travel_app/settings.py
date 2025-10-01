@@ -6,34 +6,19 @@ import dj_database_url
 
 # ─── 1) Base Directory & Environment Variables ────────────────────────────────
 BASE_DIR = Path(__file__).resolve().parent.parent
-load_dotenv(BASE_DIR / ".env")  # Load .env from project root
+load_dotenv(BASE_DIR / ".env")
 
-# Security settings
 SECRET_KEY = os.getenv("SECRET_KEY", "change-me-in-prod")
 DEBUG = os.getenv("DEBUG", "False").lower() == "true"
 
-# --- UPDATED SECTION ---
-# This list allows your app to run locally on 127.0.0.1 and localhost.
-ALLOWED_HOSTS = [
-    '127.0.0.1',
-    'localhost',
-]
-
-# This line gets the auto-generated domain name from Render when deployed.
-RENDER_EXTERNAL_HOSTNAME = os.getenv('RENDER_EXTERNAL_HOSTNAME')
+ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
+RENDER_EXTERNAL_HOSTNAME = os.getenv("RENDER_EXTERNAL_HOSTNAME")
 if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
-# --- END UPDATED SECTION ---
-
-
-# Chapa payment settings
-CHAPA_SECRET_KEY = os.getenv("CHAPA_SECRET_KEY", "")
-FRONTEND_RETURN_URL = os.getenv("FRONTEND_RETURN_URL", "http://localhost:3000/payment/success")
-API_CALLBACK_URL = os.getenv("API_CALLBACK_URL", "http://127.0.0.1:8000/api/payments/verify/")
 
 # ─── 2) Installed Apps ────────────────────────────────────────────────────────
 INSTALLED_APPS = [
-    # Django core
+    # Django
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -45,7 +30,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "drf_yasg",
     "django_ip_geolocation",
-    # Local apps
+    # Local
     "listings",
 ]
 
@@ -63,12 +48,11 @@ MIDDLEWARE = [
     "django_ip_geolocation.middleware.IpGeolocationMiddleware",
 ]
 
-# ─── 4) URLs & WSGI/ASGI ──────────────────────────────────────────────────────
 ROOT_URLCONF = "alx_travel_app.urls"
 WSGI_APPLICATION = "alx_travel_app.wsgi.application"
 ASGI_APPLICATION = "alx_travel_app.asgi.application"
 
-# ─── 5) Templates ─────────────────────────────────────────────────────────────
+# ─── 4) Templates ─────────────────────────────────────────────────────────────
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
@@ -85,15 +69,15 @@ TEMPLATES = [
     },
 ]
 
-# ─── 6) Database ──────────────────────────────────────────────────────────────
+# ─── 5) Database ──────────────────────────────────────────────────────────────
 DATABASES = {
     "default": dj_database_url.config(
         default=os.getenv("DATABASE_URL", f"sqlite:///{BASE_DIR / 'db.sqlite3'}"),
-        conn_max_age=600
+        conn_max_age=600,
     )
 }
 
-# ─── 7) Authentication & Passwords ────────────────────────────────────────────
+# ─── 6) Authentication ────────────────────────────────────────────────────────
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
@@ -101,13 +85,13 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
-# ─── 8) Internationalization & Time Zone ──────────────────────────────────────
+# ─── 7) Internationalization ──────────────────────────────────────────────────
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = os.getenv("TIME_ZONE", "Africa/Lagos")
 USE_I18N = True
 USE_TZ = True
 
-# ─── 9) Static & Media Files ──────────────────────────────────────────────────
+# ─── 8) Static / Media ────────────────────────────────────────────────────────
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [BASE_DIR / "static"] if (BASE_DIR / "static").exists() else []
@@ -118,7 +102,7 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# ─── 10) CORS & CSRF ──────────────────────────────────────────────────────────
+# ─── 9) CORS / CSRF ───────────────────────────────────────────────────────────
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
@@ -129,22 +113,20 @@ CSRF_TRUSTED_ORIGINS = [
     "http://127.0.0.1:8000",
 ] + ([os.getenv("API_CALLBACK_URL")] if os.getenv("API_CALLBACK_URL") else [])
 
-# ─── 11) Django REST Framework ────────────────────────────────────────────────
+# ─── 10) DRF ──────────────────────────────────────────────────────────────────
 REST_FRAMEWORK = {
-    "DEFAULT_PERMISSION_CLASSES": [
-        "rest_framework.permissions.AllowAny",
-    ],
+    "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.AllowAny"],
     "DEFAULT_SCHEMA_CLASS": "rest_framework.schemas.coreapi.AutoSchema",
 }
 
-# ─── 12) Swagger (drf_yasg) ───────────────────────────────────────────────────
+# ─── 11) Swagger ──────────────────────────────────────────────────────────────
 SWAGGER_SETTINGS = {
     "DOC_EXPANSION": "none",
     "USE_SESSION_AUTH": False,
     "JSON_EDITOR": True,
 }
 
-# ─── 13) Celery Configuration ─────────────────────────────────────────────────
+# ─── 12) Celery ───────────────────────────────────────────────────────────────
 CELERY_BROKER_URL = os.getenv("REDIS_URL", "redis://127.0.0.1:6379/0")
 CELERY_RESULT_BACKEND = os.getenv("REDIS_URL", "redis://127.0.0.1:6379/0")
 CELERY_ACCEPT_CONTENT = ["json"]
@@ -152,30 +134,22 @@ CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
 CELERY_TIMEZONE = os.getenv("TIME_ZONE", "Africa/Lagos")
 
-# ─── 14) Email Settings ───────────────────────────────────────────────────────
+# ─── 13) Email ───────────────────────────────────────────────────────────────
 EMAIL_BACKEND = os.getenv("EMAIL_BACKEND", "django.core.mail.backends.console.EmailBackend")
 DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "no-reply@alxtravelapp.com")
 
-# ─── 15) IP Geolocation (django-ip-geolocation) ───────────────────────────────
+# ─── 14) IP Geolocation ───────────────────────────────────────────────────────
+# ✅ FIX: Use only supported backends (ipstack or freegeoip)
 IP_GEOLOCATION_SETTINGS = {
-    # Correct this line to provide the full import path
-    "BACKEND": "django_ip_geolocation.backends.ipapi",
-    "API_KEY": os.getenv("IPAPI_API_KEY", ""),
+    "BACKEND": "django_ip_geolocation.backends.ipstack",  # or "freegeoip"
+    "API_KEY": os.getenv("IPSTACK_API_KEY", ""),  # required for ipstack
     "ENABLED": os.getenv("IP_GEOLOCATION_ENABLED", "True").lower() == "true",
 }
 
-
-# ─── 16) Logging ──────────────────────────────────────────────────────────────
+# ─── 15) Logging ──────────────────────────────────────────────────────────────
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
-    "handlers": {
-        "console": {
-            "class": "logging.StreamHandler",
-        },
-    },
-    "root": {
-        "handlers": ["console"],
-        "level": "INFO",
-    },
+    "handlers": {"console": {"class": "logging.StreamHandler"}},
+    "root": {"handlers": ["console"], "level": "INFO"},
 }
